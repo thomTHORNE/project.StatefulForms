@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import 'css-reset';
+@import 'mixins';
+@import 'form';
+@import 'alert';
+
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    letter-spacing: -0.01em;
+    color: rgb(46, 46, 46);
+    overflow-x: hidden;
+
+    @include mobile {
+        @include font-small;
+    }
+}
+
+main {
+    margin-top: 115px;
+
+    @include mobile {
+        margin-top: 100px;
+    }
+}
+
+.container {
+    max-width: 87.5rem;
+    width: 100%;
+    margin: 0px auto;
+    padding: 50px;
+
+    @include mobile {
+        padding: 25px;
+    }
+}
+
+
+
+.card {
+    background-color: grey;
+    padding: 1.875rem 1.563rem;
+    border-radius: 8px;
+    min-height: 23.75rem;
+
+    ul {
+        padding-left: 1.313rem;
+
+        li {
+            padding-bottom: 0.625rem;
+        }
+    }
+}
+
+h1 {
+    font-size: 4.25rem;
+    font-weight: 400;
+    line-height: 4.688rem;
+    letter-spacing: -0.04em;
+
+    @include mobile {
+        font-size: 2.5rem;
+        line-height: 3rem;
+
+    }
+}
+
+h2 {
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 3.625rem;
+    letter-spacing: -0.01em;
+    padding-bottom: 3.125rem;
+
+    @include mobile {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        color: blue;
+        padding-bottom: 1.875rem;
+
+    }
+}
+
+h3 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    line-height: 2.938rem;
+    letter-spacing: -0.01em;
+    padding-bottom: 4.688rem;
+    color: blue;
+
+    @include mobile {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        color: blue;
+        padding-bottom: 1.875rem;
+
+    }
+}
+
+h4 {
+    @include font-big;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    padding-bottom: 2.5rem;
+}
+
+p {
+    padding-bottom: 2.813rem;
+}
+
+ul {
+    padding-left: 2rem;
+    padding-bottom: 2.813rem;
+}
+
+.text-large {
+    @include font-big;
+}

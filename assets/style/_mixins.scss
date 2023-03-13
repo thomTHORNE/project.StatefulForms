@@ -1,0 +1,55 @@
+@mixin desktop {
+    @media (min-width: 993px) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media (max-width: 992px) {
+        @content;
+    }
+}
+
+@mixin mobile-xs {
+    @media (max-width: 360px) {
+        @content;
+    }
+}
+
+@mixin font-big {
+    font-size: 1.375rem;
+    line-height: 2.063rem;
+
+    @include mobile {
+        font-size: 0.938rem;
+        line-height: 1.313rem;
+
+    }
+}
+
+@mixin font-small {
+    font-size: 0.875rem;
+    line-height: 1.313rem;
+}
+
+@mixin font-extra-small {
+    font-size: 0.625rem;
+    line-height: 1rem;
+}
+
+@mixin grid {
+    flex: 1 0 $col-width;
+    position: relative;
+}
+
+.mobile-only {
+    @include desktop {
+        display: none !important;
+    }
+}
+
+.desktop-only {
+    @include mobile {
+        display: none !important;
+    }
+}
