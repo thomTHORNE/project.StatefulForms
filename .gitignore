@@ -3,3 +3,6 @@
 *.scss.map
 style.css
 style.css.map
+
+.idea
+.vscode

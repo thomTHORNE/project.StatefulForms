@@ -17,7 +17,7 @@ function StateService() {
   }
 
 
-  function WriteState( id: string, key: string, value: StateModelValue ) {
+  function WriteState( id: string, key: string, value: any ) {
     console.log( 'write -> state:id: ', id );
     console.log( 'write -> state:key: ', key );
     console.log( 'write -> state:value: ', value );

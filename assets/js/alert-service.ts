@@ -138,7 +138,7 @@ function AlertService(): IAlertService {
 }
 
 
-// #region Constants
+// region Constants
 const AlertHeight = 56;
 const AlertMargin = 10;
 const AlertLastChildMargin = 32;
@@ -184,4 +184,4 @@ const AlertIcons = {
     </svg>
   `
 };
-// #endregion
+// endregion

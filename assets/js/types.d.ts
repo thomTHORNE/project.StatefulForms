@@ -28,11 +28,10 @@ type AlertConfigVariation = 'validation' | 'success' | 'warning' | 'error' | 'hi
 // #region StateService
 interface IStateService {
   CreateState: () => void;
-  WriteState: ( id: string, key: string, value: StateModelValue ) => void;
+  WriteState: ( id: string, key: string, value: any ) => void;
   ReadState: ( id: string ) => StateModel;
 }
-type StateModelValue = string | number | boolean | Record<string, string>;
-type StateModel = Record<string, StateModelValue>;
+type StateModel = Record<string, any>;
 // #endregion
 
 
@@ -55,9 +54,17 @@ type SelectiveValidityState = Omit<ValidityState, 'typeMismatch'>;
 // #endregion
 
 
-// #region FormService
+// #region ApiService
 interface IApiService {
-  Post: ( url: string, data: StateModel ) => Promise<void>;
+  Post: ( url: string, data: StateModel ) => Promise<IApiResponse>;
+}
+interface IApiResponse {
+  result: boolean;
+  errorDataset: {
+    message: string;
+    errorCode: number;
+  }[];
+  message: string;
 }
 // #endregion
 

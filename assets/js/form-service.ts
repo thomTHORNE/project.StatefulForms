@@ -1,16 +1,8 @@
-
 function FormService(
   stateService: IStateService,
   apiService: IApiService,
   alertService: IAlertService
 ): IFormService {
-
-  function postForm( model: StateModel ) {
-    apiService.Post( "https://example.com/answer", model ).then( ( data: unknown ) => {
-      console.log( 'data: ', data );
-    } );
-  }
-
 
   function Submit( formName: string ) {
     const form = document.forms.namedItem( formName ) as FormElement;
@@ -26,18 +18,17 @@ function FormService(
         stateService.WriteState( formName, field.name, field.value );
       } );
 
-      postForm( stateService.ReadState( formName ) );
+      _PostForm( stateService.ReadState( formName ) );
     } else {
       const invalidFields = _GetInvalidFields( form );
       let alerts: IAlertConfig[] = [];
-
 
       invalidFields.forEach( field => {
 
         ( field.validation ).forEach( type => {
           const validationText = field.displayName + ValidationTypeDictionary[type];
           const alertConfig = alertService.ConfigFactory( 'validation', validationText );
-          // const alert = createAlert( alertConfig );
+
           Object.keys( ValidationTypeDictionary ).includes( type ) && alerts.push( alertConfig );
         } );
       } );
@@ -47,8 +38,14 @@ function FormService(
   }
 
 
-  function _RenderFormErrors( invalidFields: FormField[], alerts: IAlertConfig[], alertsContainer: HTMLElement ) {
+  function _PostForm( model: StateModel ) {
+    apiService.Post( "/api/form/submit", model ).then( () => {
+      // Do something
+    } );
+  }
 
+
+  function _RenderFormErrors( invalidFields: FormField[], alerts: IAlertConfig[], alertsContainer: HTMLElement ) {
     alertService.RenderAlerts( alertsContainer, alerts );
     invalidFields.forEach( fieldData => fieldData.field.closest( '.field' ).classList.add( 'invalid' ) );
   }
@@ -78,7 +75,7 @@ function FormService(
   }
 
 
-  // #region FileUpload
+  // region FileUpload
   /**
    * Read file as base64 and write to state. Currently supports only single file upload.
    */
@@ -109,7 +106,7 @@ function FormService(
       } );
     }
   }
-  // #endregion
+  // endregion
 
 
   return {
@@ -119,7 +116,7 @@ function FormService(
 }
 
 
-// #region Constants
+// region Constants
 /**
  * Validation dictionary - use with field name as suffix.
  */
@@ -135,4 +132,4 @@ const ValidationTypeDictionary = {
   tooShort: '',
   valid: ''
 };
-// #endregion
+// endregion

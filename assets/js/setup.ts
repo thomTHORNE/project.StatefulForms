@@ -1,14 +1,14 @@
-// #region Init
+// region Setup
 const alertService = AlertService();
 const stateService = StateService();
-const apiService = ApiService( alertService );
+const apiService = ApiService( alertService, document.querySelector<HTMLElement>( '.form-alerts' ) );
 const formService = FormService( stateService, apiService, alertService );
 
 ( () => stateService.CreateState() )();
-// #endregion
+// endregion
 
 
-// #region Utils
+// region Utils
 /**
  * Used in `FormService.GetInvalidFields` to create a JavaScript clone object from HTMLObjectElement
  */
@@ -19,4 +19,4 @@ function createObject<Source>( source: Source, omitKeys: ( keyof Source )[] ): R
   }
   return target;
 }
-// #endregion
+// endregion

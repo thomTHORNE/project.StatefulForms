@@ -1,4 +1,4 @@
-function ApiService( alertService: IAlertService ) {
+function ApiService( alertService: IAlertService, alertsContainer: HTMLElement ): IApiService {
 
   async function Post( url: string, data: StateModel ) {
     return await fetch( url, {
@@ -13,49 +13,55 @@ function ApiService( alertService: IAlertService ) {
       // redirect: "follow",
       // referrerPolicy: "no-referrer",
       body: JSON.stringify( data )
-    } ).then( response => {
-      response.json();
-    } ).catch( ( error ) => {
-      console.log( 'error: ', error );
+    } )
+      .then( ( response: Response ) => {
+        if ( response.ok ) {
+          return response.json();
+        }
+        else {
+          return Promise.reject( response );
+        }
+      } )
+      .then( ( data: IApiResponse ) => {
+        const alertConfig = alertService.ConfigFactory(
+          'success',
+          'Uspjeh',
+          {
+            message: data.message,
+            dismissCallback: alertService.DismissAlert
+          } );
 
-      const alertConfig = alertService.ConfigFactory(
-        'error',
-        'Puče veza',
-        {
-          message: 'Molimo ponovno ugasite i upalite kompjuter.',
-          // [-] EXAMPLE: if in need of custom logic, you can still use AlertService.DismissAlert by assigning the correct this reference
-          // dismissCallback: function () {
-          //   alertService.DismissAlert.call( this );
-          // }
-          dismissCallback: alertService.DismissAlert
+        alertService.RenderAlerts( alertsContainer, [alertConfig] );
+
+        return data;
+      } )
+      .catch( ( response: Response ) => {
+        console.log( response.status, response.statusText );
+
+        return response.json().then( ( error: IApiResponse ) => {
+          let alerts: IAlertConfig[] = [];
+
+          error.errorDataset.forEach( data => {
+            const alertConfig = alertService.ConfigFactory(
+              'error',
+              data.message,
+              {
+                message: data.errorCode.toString(),
+                // [-] EXAMPLE: if in need of custom logic, you can still use AlertService.DismissAlert by assigning the correct this reference
+                // dismissCallback: function () {
+                //   alertService.DismissAlert.call( this );
+                // }
+                dismissCallback: alertService.DismissAlert
+              } );
+
+            alerts.push( alertConfig );
+          } );
+
+          alertService.RenderAlerts( alertsContainer, alerts );
+
+          return error;
         } );
-      // const alertConfig = alertService.ConfigFactory(
-      //   'success',
-      //   'Uspjeh',
-      //   {
-      //     message: 'Poslali ste nebitnu prijavu.',
-      //     dismissCallback: alertService.DismissAlert
-      //   } );
-      // const alertConfig = alertService.ConfigFactory(
-      //   'hint',
-      //   'Uspjeh',
-      //   {
-      //     message: 'Poslali ste nebitnu prijavu.',
-      //     dismissCallback: alertService.DismissAlert
-      //   } );
-      // const alertConfig = alertService.ConfigFactory(
-      //   'warning',
-      //   'Uspjeh',
-      //   {
-      //     message: 'Poslali ste nebitnu prijavu.',
-
-      //     dismissCallback: alertService.DismissAlert
-      //   } );
-
-      const alertsContainer = document.querySelector<HTMLElement>( '.form-alerts' );
-
-      alertService.RenderAlerts( alertsContainer, [alertConfig] );
-    } );
+      } );
   }
 
   return {

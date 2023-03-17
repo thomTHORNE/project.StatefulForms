@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-function ApiService(alertService) {
+function ApiService(alertService, alertsContainer) {
     function Post(url, data) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield fetch(url, {
@@ -18,16 +18,37 @@ function ApiService(alertService) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data)
-            }).then(response => {
-                response.json();
-            }).catch((error) => {
-                console.log('error: ', error);
-                const alertConfig = alertService.ConfigFactory('error', 'Puče veza', {
-                    message: 'Molimo ponovno ugasite i upalite kompjuter.',
+            })
+                .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                else {
+                    return Promise.reject(response);
+                }
+            })
+                .then((data) => {
+                const alertConfig = alertService.ConfigFactory('success', 'Uspjeh', {
+                    message: data.message,
                     dismissCallback: alertService.DismissAlert
                 });
-                const alertsContainer = document.querySelector('.form-alerts');
                 alertService.RenderAlerts(alertsContainer, [alertConfig]);
+                return data;
+            })
+                .catch((response) => {
+                console.log(response.status, response.statusText);
+                return response.json().then((error) => {
+                    let alerts = [];
+                    error.errorDataset.forEach(data => {
+                        const alertConfig = alertService.ConfigFactory('error', data.message, {
+                            message: data.errorCode.toString(),
+                            dismissCallback: alertService.DismissAlert
+                        });
+                        alerts.push(alertConfig);
+                    });
+                    alertService.RenderAlerts(alertsContainer, alerts);
+                    return error;
+                });
             });
         });
     }

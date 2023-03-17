@@ -1,7 +1,7 @@
 "use strict";
 const alertService = AlertService();
 const stateService = StateService();
-const apiService = ApiService(alertService);
+const apiService = ApiService(alertService, document.querySelector('.form-alerts'));
 const formService = FormService(stateService, apiService, alertService);
 (() => stateService.CreateState())();
 function createObject(source, omitKeys) {

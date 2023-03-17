@@ -1,10 +1,5 @@
 "use strict";
 function FormService(stateService, apiService, alertService) {
-    function postForm(model) {
-        apiService.Post("https://example.com/answer", model).then((data) => {
-            console.log('data: ', data);
-        });
-    }
     function Submit(formName) {
         const form = document.forms.namedItem(formName);
         const isValid = form.checkValidity();
@@ -17,7 +12,7 @@ function FormService(stateService, apiService, alertService) {
                     return;
                 stateService.WriteState(formName, field.name, field.value);
             });
-            postForm(stateService.ReadState(formName));
+            _PostForm(stateService.ReadState(formName));
         }
         else {
             const invalidFields = _GetInvalidFields(form);
@@ -31,6 +26,10 @@ function FormService(stateService, apiService, alertService) {
             });
             _RenderFormErrors(invalidFields, alerts, alertsContainer);
         }
+    }
+    function _PostForm(model) {
+        apiService.Post("/api/form/submit", model).then(() => {
+        });
     }
     function _RenderFormErrors(invalidFields, alerts, alertsContainer) {
         alertService.RenderAlerts(alertsContainer, alerts);
