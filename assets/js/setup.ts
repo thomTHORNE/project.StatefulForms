@@ -1,8 +1,8 @@
 // region Setup
-const alertService = AlertService();
-const stateService = StateService();
-const apiService = ApiService( alertService, document.querySelector<HTMLElement>( '.form-alerts' ) );
-const formService = FormService( stateService, apiService, alertService );
+const alertService: IAlertService = AlertService();
+const stateService: IStateService = StateService();
+const apiService: IApiService = ApiService( alertService, document.querySelector<HTMLElement>( '.form-alerts' ) );
+const formService: IFormService = FormService( stateService, apiService, alertService );
 
 ( () => stateService.CreateState() )();
 // endregion

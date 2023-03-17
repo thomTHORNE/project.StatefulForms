@@ -1,4 +1,4 @@
-function ApiService( alertService: IAlertService, alertsContainer: HTMLElement ): IApiService {
+function ApiService( alertService: IAlertService, alertsContainer: HTMLElement ) {
 
   async function Post( url: string, data: StateModel ) {
     return await fetch( url, {

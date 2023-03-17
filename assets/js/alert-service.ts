@@ -1,4 +1,4 @@
-function AlertService(): IAlertService {
+function AlertService() {
 
   function ConfigFactory(
     variation: AlertConfigVariation,
