@@ -1,6 +1,6 @@
 "use strict";
-function FormService(stateService, apiService, alertService) {
-    function Submit(formName) {
+function FormService(stateService, alertService) {
+    function Submit(formName, callback) {
         const form = document.forms.namedItem(formName);
         const isValid = form.checkValidity();
         const alertsContainer = document.querySelector('.form-alerts');
@@ -12,7 +12,7 @@ function FormService(stateService, apiService, alertService) {
                     return;
                 stateService.WriteState(formName, field.name, field.value);
             });
-            _PostForm(stateService.ReadState(formName));
+            callback(stateService.ReadState(formName));
         }
         else {
             const invalidFields = _GetInvalidFields(form);
@@ -26,10 +26,6 @@ function FormService(stateService, apiService, alertService) {
             });
             _RenderFormErrors(invalidFields, alerts, alertsContainer);
         }
-    }
-    function _PostForm(model) {
-        apiService.Post("/api/form/submit", model).then(() => {
-        });
     }
     function _RenderFormErrors(invalidFields, alerts, alertsContainer) {
         alertService.RenderAlerts(alertsContainer, alerts);
@@ -66,7 +62,7 @@ function FormService(stateService, apiService, alertService) {
                     const readerModel = {
                         filename: filename,
                         contentType: contentType,
-                        base64Data: encodedFile.split(";base64,")[1]
+                        base64: encodedFile.split(";base64,")[1]
                     };
                     uploadZone.parentElement.classList.add('hasDocument');
                     stateService.WriteState(formName, fieldName, readerModel);

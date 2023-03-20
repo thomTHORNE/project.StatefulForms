@@ -1,10 +1,9 @@
 function FormService(
   stateService: IStateService,
-  apiService: IApiService,
   alertService: IAlertService
-): IFormService {
+) {
 
-  function Submit( formName: string ) {
+  function Submit( formName: keyof IStateModel, callback: ( input: IStateModel[typeof formName] ) => void ) {
     const form = document.forms.namedItem( formName ) as FormElement;
     const isValid = form.checkValidity();
     const alertsContainer: HTMLElement = document.querySelector( '.form-alerts' );
@@ -15,10 +14,10 @@ function FormService(
     if ( isValid ) {
       formElements.forEach( field => {
         if ( field.nodeName === 'INPUT' && field.type === 'file' ) return;
-        stateService.WriteState( formName, field.name, field.value );
+        stateService.WriteState( formName, ( field.name as keyof IStateModel[keyof IStateModel] ), field.value );
       } );
 
-      _PostForm( stateService.ReadState( formName ) );
+      callback( stateService.ReadState( formName ) );
     } else {
       const invalidFields = _GetInvalidFields( form );
       let alerts: IAlertConfig[] = [];
@@ -35,13 +34,6 @@ function FormService(
 
       _RenderFormErrors( invalidFields, alerts, alertsContainer );
     }
-  }
-
-
-  function _PostForm( model: StateModel ) {
-    apiService.Post( "/api/form/submit", model ).then( () => {
-      // Do something
-    } );
   }
 
 
@@ -80,8 +72,8 @@ function FormService(
    * Read file as base64 and write to state. Currently supports only single file upload.
    */
   function OnFileUpload( uploadZone: HTMLInputElement ) {
-    const formName = uploadZone.closest( 'form' ).id;
-    const fieldName = uploadZone.name;
+    const formName = uploadZone.closest( 'form' ).id as keyof IStateModel;
+    const fieldName = uploadZone.name as keyof IStateModel[keyof IStateModel];
 
     if ( uploadZone && uploadZone.files && uploadZone.files.length > 0 ) {
 
@@ -92,10 +84,10 @@ function FormService(
 
         fileReader.onload = function ( event ) {
           const encodedFile = event.target.result as string;
-          const readerModel = {
+          const readerModel: IFileModel = {
             filename: filename,
             contentType: contentType,
-            base64Data: encodedFile.split( ";base64," )[1]
+            base64: encodedFile.split( ";base64," )[1]
           };
 
           uploadZone.parentElement.classList.add( 'hasDocument' );
@@ -114,7 +106,6 @@ function FormService(
     OnFileUpload
   };
 }
-
 
 // region Constants
 /**

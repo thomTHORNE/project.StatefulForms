@@ -11,7 +11,7 @@
     href="assets/style/style.css"
     type="text/css">
 
-  <title>Stateful Forms</title>
+  <title>HROK</title>
 </head>
 
 <body>
@@ -93,6 +93,7 @@
                   </i>
                 </span>
                 <input required
+                  accept="application/pdf, text/plain"
                   onchange="formService.OnFileUpload(this)"
                   id="cv"
                   name="cv"
@@ -137,18 +138,19 @@
                   </i>
                 </span>
                 <input required
+                  accept="application/pdf, text/plain"
                   onchange="formService.OnFileUpload(this)"
                   id="letter"
                   name="letter"
                   type="file">
               </div>
+            </label>
           </div>
-          </label>
         </div>
       </form>
 
       <button type="button"
-        onclick="formService.Submit('job-application')"
+        onclick="formService.Submit('job-application', postCareerForm)"
         class="btn btn-primary">Pošalji</button>
 
 

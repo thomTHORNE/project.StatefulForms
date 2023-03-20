@@ -2,9 +2,25 @@
 const alertService: IAlertService = AlertService();
 const stateService: IStateService = StateService();
 const apiService: IApiService = ApiService( alertService, document.querySelector<HTMLElement>( '.form-alerts' ) );
-const formService: IFormService = FormService( stateService, apiService, alertService );
+const formService: IFormService = FormService( stateService, alertService );
 
 ( () => stateService.CreateState() )();
+// endregion
+
+
+// region Form submit handler
+function postCareerForm( input: ICareerModel ) {
+  const model: IPostCareerModel = {
+    firstName: input.fname,
+    lastName: input.lname,
+    email: input.email,
+    phoneNumber: input.phoneNumber,
+    attachments: [input.cv, input.letter]
+  };
+  apiService.Post( "/api/form/submit", model ).then( () => {
+    // Do something
+  } );
+}
 // endregion
 
 

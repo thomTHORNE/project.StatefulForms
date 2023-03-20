@@ -1,6 +1,6 @@
 function ApiService( alertService: IAlertService, alertsContainer: HTMLElement ) {
 
-  async function Post( url: string, data: StateModel ) {
+  async function Post( url: string, data: Record<string, any> ): Promise<IApiResponse> {
     return await fetch( url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin

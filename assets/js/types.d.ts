@@ -28,16 +28,18 @@ type AlertConfigVariation = 'validation' | 'success' | 'warning' | 'error' | 'hi
 // #region StateService
 interface IStateService {
   CreateState: () => void;
-  WriteState: ( id: string, key: string, value: any ) => void;
-  ReadState: ( id: string ) => StateModel;
+  WriteState: ( id: keyof IStateModel, prop: keyof IStateModel[typeof id], value: any ) => void;
+  ReadState: ( id: keyof IStateModel ) => IStateModel[typeof id];
 }
-type StateModel = Record<string, any>;
+interface IStateModel {
+  'job-application': ICareerModel;
+}
 // #endregion
 
 
 // #region FormService
 interface IFormService {
-  Submit: ( formName: string ) => void;
+  Submit: ( formName: keyof IStateModel, callback: ( input: IStateModel[typeof formName] ) => void ) => void;
   OnFileUpload: ( uploadZone: HTMLInputElement ) => void;
 }
 interface FormElement extends HTMLFormElement {
@@ -56,7 +58,7 @@ type SelectiveValidityState = Omit<ValidityState, 'typeMismatch'>;
 
 // #region ApiService
 interface IApiService {
-  Post: ( url: string, data: StateModel ) => Promise<IApiResponse>;
+  Post: ( url: string, data: Record<string, any> ) => Promise<IApiResponse>;
 }
 interface IApiResponse {
   result: boolean;
@@ -71,4 +73,28 @@ interface IApiResponse {
 
 // #region Utilities
 type ValueOf<T> = T[keyof T];
+// #endregion
+
+
+// #region FormModels
+interface IPostCareerModel {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  attachments: IFileModel[];
+}
+interface ICareerModel {
+  fname: string;
+  lname: string;
+  email: string;
+  phoneNumber: string;
+  cv: IFileModel;
+  letter: IFileModel;
+}
+interface IFileModel {
+  filename: string;
+  contentType: string;
+  base64: string;
+}
 // #endregion

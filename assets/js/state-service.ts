@@ -1,8 +1,8 @@
 function StateService() {
 
-  const _state = new Map<string, StateModel>();
+  const _state = new Map<keyof IStateModel, IStateModel[keyof IStateModel]>();
 
-  function CreateState() {
+  function CreateState(): void {
     Array.from( document.forms ).forEach( ( form: FormElement ) => {
       const formElements = Array.from<HTMLInputElement>( form.elements );
       let model: any = {};
@@ -11,23 +11,23 @@ function StateService() {
         model[field.name] = field.value;
       } );
 
-      _state.set( form.id, model );
+      _state.set( form.id as keyof IStateModel, model );
     } );
     console.log( 'create -> state: ', _state );
   }
 
 
-  function WriteState( id: string, key: string, value: any ) {
+  function WriteState( id: keyof IStateModel, prop: keyof IStateModel[typeof id], value: any ): void {
     console.log( 'write -> state:id: ', id );
-    console.log( 'write -> state:key: ', key );
+    console.log( 'write -> state:prop: ', prop );
     console.log( 'write -> state:value: ', value );
     const model = _state.get( id );
-    model[key] = value;
+    model[prop] = value;
     console.log( 'write -> state: ', _state );
   }
 
 
-  function ReadState( id: string ) {
+  function ReadState( id: keyof IStateModel ): IStateModel[typeof id] {
     console.log( 'get -> state: ', _state.get( id ) );
     return _state.get( id );
   }
